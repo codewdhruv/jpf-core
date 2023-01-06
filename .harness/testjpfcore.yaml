@@ -1,0 +1,42 @@
+pipeline:
+  name: test-jpf-core
+  identifier: testjpfcore
+  projectIdentifier: DhrubaCI
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: dhrubaaccountconnector
+        repoName: jpf-core
+        build: <+input>
+  stages:
+    - stage:
+        name: baseline build
+        identifier: baseline_build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Build with Gradle
+                  identifier: Build_with_Gradle
+                  spec:
+                    shell: Sh
+                    command: ./gradlew check
+              - step:
+                  type: Run
+                  name: Run PolDet test
+                  identifier: Run_PolDet_test
+                  spec:
+                    shell: Sh
+                    command: ./gradlew testPolDet
